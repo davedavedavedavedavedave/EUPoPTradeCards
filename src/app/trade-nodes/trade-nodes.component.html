@@ -1,0 +1,47 @@
+<div class="container">
+  <div class="tableWrapper">
+    <table *ngIf="generalStatsObs | async as generalStats">
+      <thead>
+        <tr>
+          <th>Connected</th>
+          <th>Naval TP</th>
+          <th>Name</th>
+          <th>used</th>
+          <th>perc.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tradeNode of sort(tradeNodesObs | async, 'usedIn')" [class.active]="tradeNode.name == id">
+          <td><input type="checkbox" [checked]="tradeNode.connectedToCapital" (input)="toggleTradeNodeConnection(tradeNode.name)"/></td>
+          <td><input type="number" min="0" step="1" [readOnly]="tradeNode.adjacentSeaZones.length == 0" [value]="tradeNode.navalTradePower" (input)="setTradeNodeNavalPower(tradeNode.name, $event)"/></td>
+          <td><a [routerLink]="['/trade-nodes', tradeNode.name]">{{ tradeNode.name }}</a></td>
+          <td>{{ tradeNode.usedIn.length }}</td>
+          <td>{{ (100/generalStats.tradeCardCount*tradeNode.usedIn.length) | number:'1.1-1' }} %</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="currentTradeNode" class="details">
+    <h3>{{ currentTradeNode.name }}</h3>
+    <h4>Relevant Provinces:</h4>
+    <ul>
+      <li *ngFor="let province of getRelevantProvinces(currentTradeNode)">
+        {{ province[0] }}x: 
+        <a [routerLink]="['/provinces', province[1].name]">{{ province[1].name }}</a>
+      </li>
+    </ul>
+    <h4>Adjacent Sea Zones:</h4>
+    <ul>
+      <li *ngFor="let seaZone of currentTradeNode.adjacentSeaZones">
+        <a [routerLink]="['/sea-zones', seaZone.name]">{{ seaZone.name }}</a>
+      </li>
+    </ul>
+    <h4>Used on Trade Cards:</h4>
+    <ul>
+      <li *ngFor="let tradeCard of currentTradeNode.usedIn">
+        <a [routerLink]="['/trade-cards', tradeCard.id]">{{ tradeCard.name }} ({{ tradeCard.id }})</a>
+      </li>
+    </ul>
+  </div>
+</div>

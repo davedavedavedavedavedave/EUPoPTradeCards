@@ -1,1 +1,49 @@
-/* You can add global styles to this file, and also import other style files */
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 3px 5px;
+}
+td:last-child,
+td:first-child {
+  text-align: center;
+}
+tr.active {
+  background-color: #bca;
+}
+nav .active {
+  font-weight: bold;
+}
+input[type="number"] {
+  width: 50px;
+}
+input[readonly] {
+  opacity: .5;
+}
+
+.container {
+  display: flex;
+}
+.tableWrapper {
+  max-height: calc(100vh - 20px);
+  overflow: auto;
+}
+.details {
+  padding: 50px;
+  box-sizing: border-box;
+  max-height: calc(100vh - 20px);
+  overflow: auto;
+}
+
+[class*=" continent"],
+[class^="continent"] {
+  font-size: .8em;
+  line-height: 1.5em;
+  background: #ccc;
+  width: 1.5em;
+  text-align: center;
+  display: inline-block;
+}

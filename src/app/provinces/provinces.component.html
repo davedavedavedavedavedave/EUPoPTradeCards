@@ -1,0 +1,39 @@
+<div class="container">
+  <div class="tableWrapper">
+    <table *ngIf="generalStatsObs | async as generalStats">
+      <thead>
+        <tr>
+          <th>Owned</th>
+          <th>Name</th>
+          <th>used</th>
+          <th>perc.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let province of sort(provincesObs | async, 'usedIn')" [class.active]="province.name == id">
+          <td><input type="checkbox" [checked]="province.owned" (input)="toggleProvinceOwned(province.name)"/></td>
+          <td><a [routerLink]="['/provinces', province.name]">{{ province.name }}</a></td>
+          <td>{{ province.usedIn.length }}</td>
+          <td>{{ (100/generalStats.tradeCardCount*province.usedIn.length) | number:'1.1-1' }} %</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="currentProvince" class="details">
+    <h3>{{ currentProvince.name }}</h3>
+    <h4>Relevant Trade Nodes:</h4>
+    <ul>
+      <li *ngFor="let tradeNode of getRelevantTradeNodes(currentProvince)">
+        {{ tradeNode[0] }}x: 
+        <a [routerLink]="['/trade-nodes', tradeNode[1].name]">{{ tradeNode[1].name }}</a>
+      </li>
+    </ul>
+    <h4>Used on Trade Cards:</h4>
+    <ul>
+      <li *ngFor="let tradeCard of currentProvince.usedIn">
+        <a [routerLink]="['/trade-cards', tradeCard.id]">{{ tradeCard.name }} ({{ tradeCard.id }})</a>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="tableWrapper">
+    <div><button (click)="tradeService.addTradeCardsToDeck(true, false, 0)">add</button> or <button (click)="tradeService.removeTradeCardsFromDeck(true, false, 0)">remove</button> all cards with †</div>
+    <div><button (click)="tradeService.addTradeCardsToDeck(false, true, 0)">add</button> or <button (click)="tradeService.removeTradeCardsFromDeck(false, true, 0)">remove</button> all cards with *</div>
+    <div><button (click)="tradeService.addTradeCardsToDeck(false, false, 1)">add</button> or <button (click)="tradeService.removeTradeCardsFromDeck(false, false, 1)">remove</button> all cards for continent <span class="continent-1">1</span></div>
+    <div><button (click)="tradeService.addTradeCardsToDeck(false, false, 2)">add</button> or <button (click)="tradeService.removeTradeCardsFromDeck(false, false, 2)">remove</button> all cards for continent <span class="continent-2">2</span></div>
+    <div><button (click)="tradeService.addTradeCardsToDeck(false, false, 3)">add</button> or <button (click)="tradeService.removeTradeCardsFromDeck(false, false, 3)">remove</button> all cards for continent <span class="continent-3">3</span></div>
+    <div><button (click)="tradeService.addTradeCardsToDeck(false, false, 4)">add</button> or <button (click)="tradeService.removeTradeCardsFromDeck(false, false, 4)">remove</button> all cards for continent <span class="continent-4">4</span></div>
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">in deck</th>
+          <th rowspan="2">ID</th>
+          <th rowspan="2">Name</th>
+          <th rowspan="2">Continents</th>
+          <th colspan="3">regular</th>
+          <th colspan="3">expanded</th>
+        </tr>
+        <tr>
+          <th>1-2</th>
+          <th>3-5</th>
+          <th>6+</th>
+          <th>1-2</th>
+          <th>3-5</th>
+          <th>6+</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let tradeCard of sort(tradeCardsObs | async, 'isInDeck')" [class.active]="tradeCard.id == id">
+          <td><input type="checkbox" [checked]="tradeCard.isInDeck" (input)="toggleTradeCardIsInDeck(tradeCard.id)"/></td>
+          <td><a [routerLink]="['/trade-cards', tradeCard.id]">{{ tradeCard.id }}</a></td>
+          <td>
+            {{ tradeCard.name }}
+            <ng-container *ngIf="tradeCard.hasAsterisk">*</ng-container>
+            <ng-container *ngIf="tradeCard.hasDagger">†</ng-container>
+          </td>
+          <td><span *ngFor="let continent of tradeCard.continentSymbols" class="continent{{ continent }}">{{ continent }}</span></td>
+          <td class="income">{{ tradeCard.incomeLow }}</td>
+          <td class="income">{{ tradeCard.incomeMid }}</td>
+          <td class="income">{{ tradeCard.incomeHigh }}</td>
+          <td class="income">{{ tradeCard.incomeExpandedLow }}</td>
+          <td class="income">{{ tradeCard.incomeExpandedMid }}</td>
+          <td class="income">{{ tradeCard.incomeExpandedHigh }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="currentTradeCard" class="details">
+    <h3>{{ currentTradeCard.name }}</h3>
+    <p *ngIf="currentTradeCard.causesInflation">Pay 1 Administrative Power or gain 1 Interest Token if (d) > ½ Base Tax</p>
+    <p *ngIf="currentTradeCard.causesPrestigeLoss">Lose 1 Prestige if Age III/IV</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Trade Nodes</th>
+          <th>Key Provinces</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let option of currentTradeCard.options">
+          <td>
+            <a [routerLink]="['/trade-nodes', option.tradeNode.name]">{{ option.tradeNode.name }}</a>
+            <ng-container *ngIf="option.tradeNode.adjacentSeaZones.length > 0"> ⛵</ng-container>
+            <div class="secondaryTradeNode" *ngIf="option.secondaryTradeNode">
+              (<a [routerLink]="['/trade-nodes', option.secondaryTradeNode.name]">{{ option.secondaryTradeNode.name }}</a><ng-container *ngIf="option.secondaryTradeNode.adjacentSeaZones.length > 0"> ⛵</ng-container>)
+            </div>
+            <div class="additionalRestriction" *ngIf="option.requiresAnyPlayerPresence">
+              A province/vassal/DNPR must exist on a Key Province
+            </div>
+            <div class="additionalRestriction" *ngIf="option.requiresPlayerPresence">
+              Must Own a Key Province to collect (d)
+            </div>
+          </td>
+          <td>
+            <div *ngFor="let province of option.keyProvinces; let idx = index;">
+              <a [routerLink]="['/provinces', province.name]">{{ province.name }}</a>
+              <ng-container *ngFor="let plus of [].constructor(option.keyProvinceMultiplier[idx]).splice(1)">+</ng-container>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

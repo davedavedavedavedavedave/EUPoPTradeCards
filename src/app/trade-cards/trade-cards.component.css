@@ -1,0 +1,16 @@
+.income {
+  text-align: center;
+}
+.details th:first-child {
+  width: 160px;
+}
+.details th,
+.details td {
+  vertical-align: top;
+  text-align: left;
+}
+.additionalRestriction,
+.secondaryTradeNode {
+  font-size: .8em;
+  font-style: italic;
+}
