@@ -3,9 +3,11 @@ import { TradeCardOption } from "./trade-card-option";
 export class TradeCard {
   id: string;
   name: string;
+  incomeDudd: number = 2;
   incomeLow: number;
   incomeMid: number;
   incomeHigh: number;
+  incomeExpandedDudd: number = 2;
   incomeExpandedLow: number;
   incomeExpandedMid: number;
   incomeExpandedHigh: number;
@@ -56,6 +58,28 @@ export class TradeCard {
     }
   }
 
+  getIncome(bracket: string): number {
+    switch (bracket) {
+      case 'incomeDudd':
+        return this.incomeDudd;
+      case 'incomeLow':
+        return this.incomeLow;
+      case 'incomeMid':
+        return this.incomeMid;
+      case 'incomeHigh':
+        return this.incomeHigh;
+      case 'incomeExpandedDudd':
+        return this.incomeExpandedDudd;
+      case 'incomeExpandedLow':
+        return this.incomeExpandedLow;
+      case 'incomeExpandedMid':
+        return this.incomeExpandedMid;
+      case 'incomeExpandedHigh':
+        return this.incomeExpandedHigh;
+    }
+    return 0;
+  }
+
   public set isInDeck(v: boolean) {
     this._isInDeck = v;
     for (let i = 0; i < this.options.length; i++) {
@@ -67,4 +91,10 @@ export class TradeCard {
   public get isInDeck(): boolean {
     return this._isInDeck;
   }
+
+  public get value(): number {
+    let numbers = this.options.map(o => this.getIncome(o.bracket));
+    return Math.max.apply(Math, numbers);
+  }
+  
 }

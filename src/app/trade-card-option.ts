@@ -5,7 +5,7 @@ import { TradeNode } from "./trade-node";
 export class TradeCardOption {
   tradeNode: TradeNode;
   keyProvinces: Province[];
-  keyProvinceMultiplier: Number[];
+  keyProvinceMultiplier: number[];
   requiresAnyPlayerPresence: Boolean;
   requiresPlayerPresence: Boolean;
   secondaryTradeNode?: TradeNode;
@@ -13,7 +13,7 @@ export class TradeCardOption {
 
   private _isInDeck: boolean = true;
 
-  constructor(tradeNode: TradeNode, keyProvinces: Province[], keyProvinceMultiplier: Number[], requiresAnyPlayerPresence: Boolean, requiresPlayerPresence: Boolean, secondaryTradeNode?: TradeNode) {
+  constructor(tradeNode: TradeNode, keyProvinces: Province[], keyProvinceMultiplier: number[], requiresAnyPlayerPresence: Boolean, requiresPlayerPresence: Boolean, secondaryTradeNode?: TradeNode) {
     if (keyProvinces.length != keyProvinceMultiplier.length) {
       throw Error('keyProvince.length does not equal keyProvinceMultiplier.length');
     }
@@ -74,10 +74,41 @@ export class TradeCardOption {
           province.usedIn.splice(provinceIdx, 1);
         }
       }
+      // trigger recalcs
+      this.tradeNode.recalcTradeCardValues();
     }
   }
   
   public get isInDeck(): boolean {
     return this._isInDeck;
+  }
+
+  public get bracket() : string {
+    let tradePower = 0;
+    if (this.tradeNode.connectedToCapital) {
+      tradePower = 1 + this.tradeNode.navalTradePower;
+      for (let i = 0; i < this.keyProvinces.length; i++) {
+        const province = this.keyProvinces[i];
+        if (province.owned) {
+          tradePower += this.keyProvinceMultiplier[i]
+        }
+      }
+    } else if (this.secondaryTradeNode?.connectedToCapital) {
+      tradePower = 1;
+    }
+    let bracket = 'income';
+    if (this.tradeNode.isExpanded) {
+      bracket += 'Expanded'
+    }
+    if (tradePower >= 6) {
+      bracket += 'High';
+    } else if (tradePower >= 3) {
+      bracket += 'Mid';
+    } else if (tradePower >= 1) {
+      bracket += 'Low';
+    } else {
+      bracket += 'Dudd';
+    }
+    return bracket;
   }
 }

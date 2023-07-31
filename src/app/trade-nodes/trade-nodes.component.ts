@@ -41,6 +41,10 @@ export class TradeNodesComponent implements OnInit, OnDestroy {
     this.tradeService.toggleTradeNodeConnection(tradeNodeName);
   }
 
+  toggleTradeNodeExpanded(tradeNodeName: string): void {
+    this.tradeService.toggleTradeNodeExpanded(tradeNodeName);
+  }
+
   sort(tradeNodes: Map<string, TradeNode> | null, property: string): TradeNode[] {
     if (tradeNodes) {
       return [...tradeNodes.values()].sort((a, b) => {

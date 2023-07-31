@@ -31,13 +31,16 @@ export class TradeCardsComponent implements OnInit, OnDestroy {
     this.tradeService.toggleTradeCardIsInDeck(tradeCardName);
   }
 
-  sort(tradeCards: Map<string, TradeCard> | null, property: string): TradeCard[] {
+  sort(tradeCards: Map<string, TradeCard> | null): TradeCard[] {
     if (tradeCards) {
       return [...tradeCards.values()].sort((a, b) => {
-        if (property == 'isInDeck' && a.isInDeck != b.isInDeck) {
+        if (a.isInDeck != b.isInDeck) {
           return a.isInDeck ? -1 : 1;
         }
-        return a.name.localeCompare(b.name);
+        if (a.value != b.value) {
+          return b.value - a.value;
+        }
+        return a.id.localeCompare(b.id);
       });
     }
     return [];

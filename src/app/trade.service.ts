@@ -84,6 +84,14 @@ export class TradeService {
     }
   }
 
+  toggleTradeNodeExpanded(tradeNodeName: string): void {
+    let tradeNode = TRADE_NODES.get(tradeNodeName);
+    if (tradeNode) {
+      tradeNode.isExpanded = !tradeNode.isExpanded;
+      // this.tradeNodeSubject.next(TRADE_NODES);
+    }
+  }
+
   getProvinces(): BehaviorSubject<Map<string, Province>> {
     return this.provinceSubject;
   }

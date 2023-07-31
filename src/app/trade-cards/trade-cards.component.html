@@ -15,6 +15,7 @@
           <th rowspan="2">Continents</th>
           <th colspan="3">regular</th>
           <th colspan="3">expanded</th>
+          <th rowspan="2">Your Value</th>
         </tr>
         <tr>
           <th>1-2</th>
@@ -26,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let tradeCard of sort(tradeCardsObs | async, 'isInDeck')" [class.active]="tradeCard.id == id">
+        <tr *ngFor="let tradeCard of sort(tradeCardsObs | async)" [class.active]="tradeCard.id == id">
           <td><input type="checkbox" [checked]="tradeCard.isInDeck" (input)="toggleTradeCardIsInDeck(tradeCard.id)"/></td>
           <td><a [routerLink]="['/trade-cards', tradeCard.id]">{{ tradeCard.id }}</a></td>
           <td>
@@ -35,12 +36,13 @@
             <ng-container *ngIf="tradeCard.hasDagger">†</ng-container>
           </td>
           <td><span *ngFor="let continent of tradeCard.continentSymbols" class="continent{{ continent }}">{{ continent }}</span></td>
-          <td class="income">{{ tradeCard.incomeLow }}</td>
-          <td class="income">{{ tradeCard.incomeMid }}</td>
-          <td class="income">{{ tradeCard.incomeHigh }}</td>
-          <td class="income">{{ tradeCard.incomeExpandedLow }}</td>
-          <td class="income">{{ tradeCard.incomeExpandedMid }}</td>
-          <td class="income">{{ tradeCard.incomeExpandedHigh }}</td>
+          <td align="center">{{ tradeCard.incomeLow }}</td>
+          <td align="center">{{ tradeCard.incomeMid }}</td>
+          <td align="center">{{ tradeCard.incomeHigh }}</td>
+          <td align="center">{{ tradeCard.incomeExpandedLow }}</td>
+          <td align="center">{{ tradeCard.incomeExpandedMid }}</td>
+          <td align="center">{{ tradeCard.incomeExpandedHigh }}</td>
+          <td align="center">{{ tradeCard.value }}</td>
         </tr>
       </tbody>
     </table>
