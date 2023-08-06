@@ -85,20 +85,28 @@ export class TradeCardOption {
 
   public get bracket() : string {
     let tradePower = 0;
+    let bracket = 'income';
     if (this.tradeNode.connectedToCapital) {
       tradePower = 1 + this.tradeNode.navalTradePower;
+      let ownedKeyProvinces = 0;
       for (let i = 0; i < this.keyProvinces.length; i++) {
         const province = this.keyProvinces[i];
         if (province.owned) {
+          ownedKeyProvinces += 1;
           tradePower += this.keyProvinceMultiplier[i]
         }
       }
+      if (this.requiresPlayerPresence && ownedKeyProvinces == 0) {
+        bracket += 'MissingKeyProvince';
+      }
+      if (this.tradeNode.isExpanded) {
+        bracket += 'Expanded';
+      }
     } else if (this.secondaryTradeNode?.connectedToCapital) {
       tradePower = 1;
-    }
-    let bracket = 'income';
-    if (this.tradeNode.isExpanded) {
-      bracket += 'Expanded'
+      if (this.secondaryTradeNode.isExpanded) {
+        bracket += 'Expanded';
+      }
     }
     if (tradePower >= 6) {
       bracket += 'High';

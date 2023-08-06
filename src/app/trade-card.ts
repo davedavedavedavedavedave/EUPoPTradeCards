@@ -7,7 +7,6 @@ export class TradeCard {
   incomeLow: number;
   incomeMid: number;
   incomeHigh: number;
-  incomeExpandedDudd: number = 2;
   incomeExpandedLow: number;
   incomeExpandedMid: number;
   incomeExpandedHigh: number;
@@ -60,22 +59,20 @@ export class TradeCard {
 
   getIncome(bracket: string): number {
     switch (bracket) {
-      case 'incomeDudd':
-        return this.incomeDudd;
       case 'incomeLow':
         return this.incomeLow;
       case 'incomeMid':
         return this.incomeMid;
       case 'incomeHigh':
         return this.incomeHigh;
-      case 'incomeExpandedDudd':
-        return this.incomeExpandedDudd;
       case 'incomeExpandedLow':
         return this.incomeExpandedLow;
       case 'incomeExpandedMid':
         return this.incomeExpandedMid;
       case 'incomeExpandedHigh':
         return this.incomeExpandedHigh;
+      default:
+        return this.incomeDudd;
     }
     return 0;
   }
