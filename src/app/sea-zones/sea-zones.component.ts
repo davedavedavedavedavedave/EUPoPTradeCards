@@ -13,7 +13,7 @@ import { GeneralStats } from '../general-stats';
 export class SeaZonesComponent implements OnInit, OnDestroy {
   id: String = '';
   seaZonesObs?: BehaviorSubject<Map<string, SeaZone>>;
-  generalStatsObs?: Observable<GeneralStats>;
+  generalStats?: GeneralStats;
   currentSeaZone?: SeaZone;
   private paramSub?: Subscription;
 
@@ -21,7 +21,7 @@ export class SeaZonesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.seaZonesObs = this.tradeService.getSeaZones();
-    this.generalStatsObs = this.tradeService.getGeneralStats();
+    this.generalStats = this.tradeService.getGeneralStats();
     this.paramSub = this.router.params.subscribe(params => {
       this.id = params['id'];
       this.currentSeaZone = this.seaZonesObs?.value.get(this.id as string);

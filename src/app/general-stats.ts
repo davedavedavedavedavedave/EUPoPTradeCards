@@ -5,27 +5,37 @@ import { TradeNode } from "./trade-node";
 import { TradeCard } from "./trade-card";
 
 export class GeneralStats {
-  subject: BehaviorSubject<GeneralStats>;
-
-  tradeCardCount: number = 0;
-  provinceCount: number = 0;
-  seaZoneCount: number = 0;
-  tradeNodeCount: number = 0;
+  // tradeCardCount: number = 0;
+  // provinceCount: number = 0;
+  // seaZoneCount: number = 0;
+  // tradeNodeCount: number = 0;
 
   constructor(
-    provinceObs: Observable<Map<string, Province>>,
-    seaZoneObs: Observable<Map<string, SeaZone>>,
-    tradeNodeObs: Observable<Map<string, TradeNode>>,
-    tradeCardObs: Observable<Map<string, TradeCard>>
-  ) {
-    this.subject = new BehaviorSubject<GeneralStats>(this);
-    provinceObs.subscribe(map => { this.provinceCount = map.size; this.subject.next(this); });
-    seaZoneObs.subscribe(map => { this.seaZoneCount = map.size; this.subject.next(this); });
-    tradeNodeObs.subscribe(map => { this.tradeNodeCount = map.size; this.subject.next(this); });
-    tradeCardObs.subscribe(map => {
-      this.tradeCardCount = 0;
-      map.forEach(tradeCard => this.tradeCardCount += tradeCard.isInDeck ? 1 : 0 );
-      this.subject.next(this);
-    });
+    private provinceObs: BehaviorSubject<Map<string, Province>>,
+    private seaZoneObs: BehaviorSubject<Map<string, SeaZone>>,
+    private tradeNodeObs: BehaviorSubject<Map<string, TradeNode>>,
+    private tradeCardObs: BehaviorSubject<Map<string, TradeCard>>
+  ) {  }
+
+  public getTradeCardCount(): number {
+    return Array.from(this.tradeCardObs.getValue()).filter(v => v[1].isInDeck).length;
   }
+  public getAddedTradeCardCountOnConnectionOf(tradeNode: TradeNode): number {
+    return Array.from(this.tradeCardObs.getValue()).filter(v => {
+      if (v[1].isInDeck && v[1].value <= 2) {
+        for (let i = 0; i < v[1].options.length; i++) {
+          const option = v[1].options[i];
+          if (option.tradeNode == tradeNode || option.secondaryTradeNode == tradeNode) {
+            return true;
+          }
+        }
+      }
+      return false;
+    }).length;
+    return 0;
+  }
+  public getTradeCardCoverage(): number {
+    return Array.from(this.tradeCardObs.getValue()).filter(v => v[1].value > 2).length;
+  }
+  
 }

@@ -108,8 +108,8 @@ export class TradeService {
     return this.tradeCardSubject;
   }
 
-  getGeneralStats(): BehaviorSubject<GeneralStats> {
-    return this.generalStats.subject;
+  getGeneralStats(): GeneralStats {
+    return this.generalStats;
   }
 }
 

@@ -14,7 +14,7 @@ import { TradeNode } from '../trade-node';
 export class ProvincesComponent implements OnInit, OnDestroy {
   id: String = '';
   provincesObs?: BehaviorSubject<Map<string, Province>>;
-  generalStatsObs?: Observable<GeneralStats>;
+  generalStats?: GeneralStats;
   currentProvince?: Province;
   private paramSub?: Subscription;
 
@@ -22,7 +22,7 @@ export class ProvincesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.provincesObs = this.tradeService.getProvinces();
-    this.generalStatsObs = this.tradeService.getGeneralStats();
+    this.generalStats = this.tradeService.getGeneralStats();
     this.paramSub = this.router.params.subscribe(params => {
       this.id = params['id'];
       this.currentProvince = this.provincesObs?.value.get(this.id as string);

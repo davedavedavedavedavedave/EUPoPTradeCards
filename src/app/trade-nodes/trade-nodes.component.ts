@@ -14,7 +14,7 @@ import { Province } from '../province';
 export class TradeNodesComponent implements OnInit, OnDestroy {
   id: String = '';
   tradeNodesObs?: BehaviorSubject<Map<string, TradeNode>>;
-  generalStatsObs?: Observable<GeneralStats>;
+  generalStats?: GeneralStats;
   currentTradeNode?: TradeNode;
   private paramSub?: Subscription;
 
@@ -22,7 +22,7 @@ export class TradeNodesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.tradeNodesObs = this.tradeService.getTradeNodes();
-    this.generalStatsObs = this.tradeService.getGeneralStats();
+    this.generalStats = this.tradeService.getGeneralStats();
     this.paramSub = this.router.params.subscribe(params => {
       this.id = params['id'];
       this.currentTradeNode = this.tradeNodesObs?.value.get(this.id as string);
@@ -50,6 +50,12 @@ export class TradeNodesComponent implements OnInit, OnDestroy {
       return [...tradeNodes.values()].sort((a, b) => {
         if (property == 'usedIn' && a.usedIn.length != b.usedIn.length) {
           return b.usedIn.length - a.usedIn.length;
+        } else if (property == 'connectionAdds' && this.generalStats) {
+          let connectionAddsA = this.generalStats.getAddedTradeCardCountOnConnectionOf(a);
+          let connectionAddsB = this.generalStats.getAddedTradeCardCountOnConnectionOf(b);
+          if (connectionAddsA != connectionAddsB) {
+            return connectionAddsB - connectionAddsA;
+          }
         }
         return a.name.localeCompare(b.name);
       });

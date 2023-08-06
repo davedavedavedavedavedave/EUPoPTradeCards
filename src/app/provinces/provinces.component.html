@@ -1,6 +1,6 @@
 <div class="container">
   <div class="tableWrapper">
-    <table *ngIf="generalStatsObs | async as generalStats">
+    <table *ngIf="generalStats">
       <thead>
         <tr>
           <th>Owned</th>
@@ -14,7 +14,7 @@
           <td><input type="checkbox" [checked]="province.owned" (input)="toggleProvinceOwned(province.name)"/></td>
           <td><a [routerLink]="['/provinces', province.name]">{{ province.name }}</a></td>
           <td>{{ province.usedIn.length }}</td>
-          <td>{{ (100/generalStats.tradeCardCount*province.usedIn.length) | number:'1.1-1' }} %</td>
+          <td>{{ (100/generalStats.getTradeCardCount()*province.usedIn.length) | number:'1.1-1' }} %</td>
         </tr>
       </tbody>
     </table>

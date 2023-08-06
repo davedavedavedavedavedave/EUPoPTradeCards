@@ -1,19 +1,21 @@
 <div class="container">
-  <div class="tableWrapper">
-    <table *ngIf="generalStatsObs | async as generalStats">
+  <div class="tableWrapper" *ngIf="generalStats">
+    <p>Trade Card Coverage: {{ generalStats.getTradeCardCoverage() }} / {{ generalStats.getTradeCardCount() }} ({{ (100/generalStats.getTradeCardCount()*generalStats.getTradeCardCoverage()) | number:'1.1-1' }} %)</p>
+    <table>
       <thead>
         <tr>
           <th colspan="3">Values used for stat calcuation</th>
           <th rowspan="2">Name</th>
           <th rowspan="2">used</th>
           <th rowspan="2">perc.</th>
-          <th colspan="7">value distribution</th>
+          <th colspan="6">value distribution</th>
+          <th rowspan="2">connection adds</th>
+          <th rowspan="2">perc.</th>
         </tr>
         <tr>
           <th>expanded</th>
           <th>Connected</th>
           <th>Naval TP</th>
-          <th>dudd</th>
           <th>3-5-7</th>
           <th>4-7-9</th>
           <th>5-8-11</th>
@@ -23,20 +25,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let tradeNode of sort(tradeNodesObs | async, 'usedIn')" [class.active]="tradeNode.name == id">
+        <tr *ngFor="let tradeNode of sort(tradeNodesObs | async, 'connectionAdds')" [class.active]="tradeNode.name == id">
           <td align="center"><input type="checkbox" [checked]="tradeNode.isExpanded" (input)="toggleTradeNodeExpanded(tradeNode.name)"/></td>
           <td align="center"><input type="checkbox" [checked]="tradeNode.connectedToCapital" (input)="toggleTradeNodeConnection(tradeNode.name)"/></td>
           <td><input type="number" min="0" step="1" [readOnly]="tradeNode.adjacentSeaZones.length == 0" [value]="tradeNode.navalTradePower" (input)="setTradeNodeNavalPower(tradeNode.name, $event)"/></td>
           <td><a [routerLink]="['/trade-nodes', tradeNode.name]">{{ tradeNode.name }}</a></td>
           <td align="center">{{ tradeNode.usedIn.length }}</td>
-          <td align="center">{{ (100/generalStats.tradeCardCount*tradeNode.usedIn.length) | number:'1.1-1' }} %</td>
-          <td align="center">{{ generalStats.tradeCardCount - tradeNode.usedIn.length }}</td>
+          <td align="center">{{ (100/generalStats.getTradeCardCount()*tradeNode.usedIn.length) | number:'1.1-1' }} %</td>
           <td align="center">{{ tradeNode.tradeCardValues[0] }}</td>
           <td align="center">{{ tradeNode.tradeCardValues[1] }}</td>
           <td align="center">{{ tradeNode.tradeCardValues[2] }}</td>
           <td align="center">{{ tradeNode.tradeCardValues[3] }}</td>
           <td align="center">{{ tradeNode.tradeCardValues[4] }}</td>
           <td align="center">{{ tradeNode.tradeCardValues[5] }}</td>
+          <td align="center">{{ generalStats.getAddedTradeCardCountOnConnectionOf(tradeNode) }}</td>
+          <td align="center">{{ (100/generalStats.getTradeCardCount()*generalStats.getAddedTradeCardCountOnConnectionOf(tradeNode)) | number:'1.1-1' }} %</td>
         </tr>
       </tbody>
     </table>
